@@ -96,10 +96,10 @@ function renderNext(){
                + (nxt ? `<small${live.length?' style="display:block;margin-top:8px"':''}>Nästa tävling</small>` + row(nxt) : "");
 }
 
-function racesHtml(e){
+function racesHtml(e, open){
   const r = (window.RACES||{})[e.sport+"|"+e.start]; if (!r) return "";
     const li = r.slice().sort((x,y)=> x[0]<y[0]?-1: x[0]>y[0]?1 : (x[2]||"").padStart(5,"0")<(y[2]||"").padStart(5,"0")?-1:1).map(([dt,t,tm]) => `<li class="${d(dt)<today?"pastr":""}"><b>${fmt(dt,dt)}</b><b class="tm">${tm?esc(tm.replace(".",":")):""}</b><span>${esc(t)}</span></li>`).join("");
-  return `<details class="races"><summary>${r.length} lopp</summary><ul>${li}</ul><div class="rn">${esc((window.RACE_NOTES||{})[e.sport]||"")}</div></details>`;
+  return `<details class="races"${open?" open":""}><summary>${r.length} lopp</summary><ul>${li}</ul><div class="rn">${esc((window.RACE_NOTES||{})[e.sport]||"")}</div></details>`;
 }
 
 function render(){
@@ -107,6 +107,7 @@ function render(){
   const root = document.getElementById("list");
   if (!list.length){ root.innerHTML = "<div class='empty'>Inga tävlingar att visa.</div>"; return; }
   let html="", cur="";
+  const nearest = list.find(e => status(e)!=="past"); // ongoing or next upcoming in the current view
   for (const e of list){
     const s = d(e.start), key = `${MONTH[s.getMonth()]} ${s.getFullYear()}`;
     if (key!==cur){ html += `<h2>${key}</h2>`; cur=key; }
@@ -116,7 +117,7 @@ function render(){
       <div><div class="name">${esc(e.name)}${e.confirmed===false?" ⚠":""}</div><div class="place">${esc(e.place)}, ${esc(e.country)}</div></div>
       <div class="tags">${st==="live"?'<span class="tag live">Pågår</span>':st==="future"?`<span class="tag">${when(e)}</span>`:""}
         <span class="tag ${e.sport==="xc"?"xc":"bia"}">${SPORT[e.sport]}</span><span class="tag">${TYPE[e.type]}</span></div>
-      ${racesHtml(e)}
+      ${racesHtml(e, e===nearest)}
       ${e.note?`<div class="warn">⚠ ${esc(e.note)}</div>`:""}
     </div>`;
   }
