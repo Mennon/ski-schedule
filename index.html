@@ -112,7 +112,9 @@ function render(){
   const root = document.getElementById("list");
   if (!list.length){ root.innerHTML = "<div class='empty'>Inga tävlingar att visa.</div>"; return; }
   let html="", cur="";
-  const nearest = list.find(e => status(e)!=="past"); // ongoing or next upcoming in the current view
+  // Expand every competition running today; if none is, expand the next upcoming one in the current view
+  const live = list.filter(e => status(e)==="live");
+  const expanded = new Set(live.length ? live : list.filter(e => status(e)==="future").slice(0,1));
   for (const e of list){
     const s = d(e.start), key = `${MONTH[s.getMonth()]} ${s.getFullYear()}`;
     if (key!==cur){ html += `<h2>${key}</h2>`; cur=key; }
@@ -122,7 +124,7 @@ function render(){
       <div><div class="name">${esc(e.name)}${e.confirmed===false?" ⚠":""}</div><div class="place">${esc(e.place)}, ${esc(e.country)}</div></div>
       <div class="tags">${st==="live"?'<span class="tag live">Pågår</span>':st==="future"?`<span class="tag">${when(e)}</span>`:""}
         <span class="tag ${e.sport==="xc"?"xc":"bia"}">${SPORT[e.sport]}</span><span class="tag">${TYPE[e.type]}</span></div>
-      ${racesHtml(e, e===nearest)}
+      ${racesHtml(e, expanded.has(e))}
       ${e.note?`<div class="warn">⚠ ${esc(e.note)}</div>`:""}
     </div>`;
   }
