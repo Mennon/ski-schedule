@@ -23,11 +23,13 @@
   button.chip:focus-visible,.races summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
   .sep{width:1px;height:22px;background:var(--line);margin:0 4px}
   h2{font-size:.82rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:24px 0 8px}
-  .ev{display:grid;grid-template-columns:110px 1fr auto;gap:4px 14px;background:var(--card);border:1px solid var(--line);border-left:5px solid var(--bia);border-radius:12px;padding:10px 14px;margin-bottom:8px;box-shadow:var(--shadow)}
+  .ev{display:grid;grid-template-columns:150px 1fr auto;gap:4px 14px;background:var(--card);border:1px solid var(--line);border-left:5px solid var(--bia);border-radius:12px;padding:10px 14px;margin-bottom:8px;box-shadow:var(--shadow)}
   .ev.xc{border-left-color:var(--xc)}
   .ev.past{opacity:.55}
   .ev.live{outline:2px solid var(--accent);outline-offset:0}
   .date{font-weight:650;font-variant-numeric:tabular-nums}
+  .wd{font-weight:400;color:var(--muted);font-size:.85em}
+  .races li .wd{min-width:34px}
   .name{font-weight:650}
   .place{color:var(--muted);font-size:.9rem}
   .tags{display:flex;gap:6px;flex-wrap:wrap;align-items:center;justify-content:flex-end}
@@ -82,6 +84,8 @@ const DAY = 864e5;
 const fmt = (a,b) => { const x=d(a), y=d(b);
   if (a===b) return `${x.getDate()} ${MON[x.getMonth()]}`;
   return x.getMonth()===y.getMonth() ? `${x.getDate()}–${y.getDate()} ${MON[y.getMonth()]}` : `${x.getDate()} ${MON[x.getMonth()]} – ${y.getDate()} ${MON[y.getMonth()]}`; };
+const WD = ["sön","mån","tis","ons","tors","fre","lör"];
+const wd = (a,b) => a===b ? WD[d(a).getDay()] : `${WD[d(a).getDay()]}–${WD[d(b).getDay()]}`;
 const status = e => d(e.end) < today ? "past" : d(e.start) <= today ? "live" : "future";
 const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const when = e => { const s=status(e);
@@ -103,7 +107,7 @@ function renderNext(){
 
 function racesHtml(e, open){
   const r = (window.RACES||{})[e.sport+"|"+e.start]; if (!r) return "";
-  const li = r.slice().sort((x,y)=> x[0]<y[0]?-1: x[0]>y[0]?1 : (x[1]||"").padStart(5,"0")<(y[1]||"").padStart(5,"0")?-1:1).map(([dt,tm,t]) => `<li class="${d(dt)<today?"pastr":""}"><b>${fmt(dt,dt)}</b><b class="tm">${tm?esc(tm.replace(".",":")):""}</b><span>${esc(t)}</span></li>`).join("");
+  const li = r.slice().sort((x,y)=> x[0]<y[0]?-1: x[0]>y[0]?1 : (x[1]||"").padStart(5,"0")<(y[1]||"").padStart(5,"0")?-1:1).map(([dt,tm,t]) => `<li class="${d(dt)<today?"pastr":""}"><b>${fmt(dt,dt)}</b><span class="wd">${wd(dt,dt)}</span><b class="tm">${tm?esc(tm.replace(".",":")):""}</b><span>${esc(t)}</span></li>`).join("");
   return `<details class="races"${open?" open":""}><summary>${r.length} lopp</summary><ul>${li}</ul><div class="rn">${esc((window.RACE_NOTES||{})[e.sport]||"")}</div></details>`;
 }
 
@@ -120,7 +124,7 @@ function render(){
     if (key!==cur){ html += `<h2>${key}</h2>`; cur=key; }
     const st = status(e);
     html += `<div class="ev ${e.sport} ${st}">
-      <div class="date">${fmt(e.start,e.end)}</div>
+      <div class="date">${fmt(e.start,e.end)} <span class="wd">${wd(e.start,e.end)}</span></div>
       <div><div class="name">${esc(e.name)}${e.confirmed===false?" ⚠":""}</div><div class="place">${esc(e.place)}, ${esc(e.country)}</div></div>
       <div class="tags">${st==="live"?'<span class="tag live">Pågår</span>':st==="future"?`<span class="tag">${when(e)}</span>`:""}
         <span class="tag ${e.sport==="xc"?"xc":"bia"}">${SPORT[e.sport]}</span><span class="tag">${TYPE[e.type]}</span></div>
