@@ -32,7 +32,7 @@ window.EVENTS = [
   { sport: "xc", type: "champ", name: "VM i nordisk skidsport", place: "Falun", country: "Sverige", start: "2027-02-24", end: "2027-03-07", confirmed: false, note: "Startdatum 22 eller 24 feb beroende på källa" }
 ];
 
-// Enskilda lopp. Nyckel: "<sport>|<startdatum för tävlingen>". Varje lopp: [datum, text, starttid (svensk tid, tom om okänd)].
+// Enskilda lopp. Nyckel: "<sport>|<startdatum för tävlingen>". Varje lopp: [datum, starttid (svensk tid, tom om okänd), text].
 // D = damer, H = herrar. Källa: Aftonbladets tv-tider (skidskytte och längdskidor), VM i skidskytte från Wikipedia (utan tider).
 window.RACE_NOTES = {
   biathlon: "Tider från Aftonbladet (svensk tid), uppdateras under säsongen. Sänds i SVT och SVT Play. VM-programmet saknar tider.",

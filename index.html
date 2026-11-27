@@ -5,36 +5,41 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Skidkalendern 2026/27</title>
 <style>
-  :root{--bg:#f5f7fa;--card:#fff;--text:#14202b;--muted:#5d6b78;--line:#dde3ea;--bia:#c2410c;--xc:#1d4ed8;--accent:#0f766e;--warn:#b45309}
-  @media (prefers-color-scheme:dark){:root{--bg:#0f1720;--card:#18222d;--text:#e8eef4;--muted:#93a1ae;--line:#2a3745;--bia:#fb923c;--xc:#60a5fa;--accent:#2dd4bf;--warn:#fbbf24}}
+  /* Cold winter palette: icy backgrounds, deep navy accent. Biathlon = warm ember, cross-country = ice blue. */
+  :root{--bg:#eaf2f8;--bg2:#dbe9f4;--card:#ffffff;--text:#0b1f33;--muted:#4f647a;--line:#cfdeea;--bia:#c2410c;--xc:#0369a1;--accent:#12355b;--accent-ink:#ffffff;--warn:#a16207;--shadow:0 1px 2px rgba(11,31,51,.06),0 4px 14px rgba(11,31,51,.06)}
+  @media (prefers-color-scheme:dark){:root{--bg:#07111b;--bg2:#0c1b2b;--card:#0f2033;--text:#e6f1fa;--muted:#8fa6bb;--line:#1d3550;--bia:#ff8f5e;--xc:#5cc8ff;--accent:#38bdf8;--accent-ink:#04202f;--warn:#fbbf24;--shadow:0 1px 2px rgba(0,0,0,.4),0 4px 14px rgba(0,0,0,.35)}}
   *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--text);font:16px/1.45 system-ui,Segoe UI,Roboto,sans-serif}
-  .wrap{max-width:860px;margin:0 auto;padding:20px 16px 48px}
-  h1{margin:0 0 4px;font-size:1.6rem}
-  .sub{color:var(--muted);margin:0 0 16px;font-size:.9rem}
-  .next{background:var(--card);border:1px solid var(--line);border-left:6px solid var(--accent);border-radius:10px;padding:14px 16px;margin-bottom:16px}
-  .next small{color:var(--muted);text-transform:uppercase;letter-spacing:.05em;font-size:.72rem}
-  .next .t{font-size:1.15rem;font-weight:600;margin-top:2px}
+  body{margin:0;background:linear-gradient(180deg,var(--bg2) 0,var(--bg) 260px) no-repeat,var(--bg);color:var(--text);font:16px/1.45 system-ui,Segoe UI,Roboto,sans-serif}
+  .wrap{max-width:860px;margin:0 auto;padding:24px 16px 48px}
+  h1{margin:0 0 4px;font-size:1.7rem;letter-spacing:-.01em}
+  .sub{color:var(--muted);margin:0 0 18px;font-size:.92rem}
+  .next{background:var(--card);border:1px solid var(--line);border-left:6px solid var(--accent);border-radius:12px;padding:14px 16px;margin-bottom:16px;box-shadow:var(--shadow)}
+  .next small{color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-size:.72rem}
+  .next .t{font-size:1.15rem;font-weight:650;margin-top:2px}
   .filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;align-items:center}
-  button.chip{border:1px solid var(--line);background:var(--card);color:var(--text);padding:6px 12px;border-radius:999px;font:inherit;font-size:.88rem;cursor:pointer}
-  button.chip[aria-pressed=true]{background:var(--accent);border-color:var(--accent);color:#fff}
+  button.chip{border:1px solid var(--line);background:var(--card);color:var(--text);padding:6px 13px;border-radius:999px;font:inherit;font-size:.88rem;cursor:pointer}
+  button.chip:hover{border-color:var(--accent)}
+  button.chip[aria-pressed=true]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+  button.chip:focus-visible,.races summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
   .sep{width:1px;height:22px;background:var(--line);margin:0 4px}
-  h2{font-size:.85rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:22px 0 8px}
-  .ev{display:grid;grid-template-columns:110px 1fr auto;gap:4px 14px;background:var(--card);border:1px solid var(--line);border-left:5px solid var(--bia);border-radius:10px;padding:10px 14px;margin-bottom:8px}
+  h2{font-size:.82rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:24px 0 8px}
+  .ev{display:grid;grid-template-columns:110px 1fr auto;gap:4px 14px;background:var(--card);border:1px solid var(--line);border-left:5px solid var(--bia);border-radius:12px;padding:10px 14px;margin-bottom:8px;box-shadow:var(--shadow)}
   .ev.xc{border-left-color:var(--xc)}
   .ev.past{opacity:.55}
-  .ev.live{outline:2px solid var(--accent)}
-  .date{font-weight:600;font-variant-numeric:tabular-nums}
-  .name{font-weight:600}
+  .ev.live{outline:2px solid var(--accent);outline-offset:0}
+  .date{font-weight:650;font-variant-numeric:tabular-nums}
+  .name{font-weight:650}
   .place{color:var(--muted);font-size:.9rem}
   .tags{display:flex;gap:6px;flex-wrap:wrap;align-items:center;justify-content:flex-end}
   .tag{font-size:.72rem;border-radius:6px;padding:2px 7px;border:1px solid var(--line);color:var(--muted);white-space:nowrap}
   .tag.bia{color:var(--bia);border-color:var(--bia)}.tag.xc{color:var(--xc);border-color:var(--xc)}
-  .tag.live{background:var(--accent);border-color:var(--accent);color:#fff}
-  .races{grid-column:1/-1}.races summary{cursor:pointer;color:var(--accent);font-size:.85rem}.races ul{list-style:none;margin:6px 0 0;padding:0;font-size:.88rem}.races li{display:flex;gap:10px;padding:2px 0;border-top:1px solid var(--line)}.races li b{min-width:62px;font-variant-numeric:tabular-nums}.races li b.tm{min-width:44px;color:var(--accent)}.races li.pastr{opacity:.5}.races .rn{color:var(--muted);font-size:.78rem;margin-top:4px}
+  .tag.live{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:600}
+  .races{grid-column:1/-1}.races summary{cursor:pointer;color:var(--xc);font-size:.85rem;font-weight:600}.ev:not(.xc) .races summary{color:var(--bia)}
+  .races ul{list-style:none;margin:6px 0 0;padding:0;font-size:.88rem}.races li{display:flex;gap:10px;padding:3px 0;border-top:1px solid var(--line)}.races li b{min-width:62px;font-variant-numeric:tabular-nums}.races li b.tm{min-width:44px;color:var(--xc)}.ev:not(.xc) .races li b.tm{color:var(--bia)}.races li.pastr{opacity:.5}.races .rn{color:var(--muted);font-size:.78rem;margin-top:4px}
   .warn{grid-column:1/-1;color:var(--warn);font-size:.82rem}
   .empty{color:var(--muted);padding:20px 0}
   footer{margin-top:28px;color:var(--muted);font-size:.8rem}
+  footer a{color:var(--xc)}
   @media(max-width:560px){.ev{grid-template-columns:1fr}.tags{justify-content:flex-start}}
 </style>
 </head>
@@ -98,7 +103,7 @@ function renderNext(){
 
 function racesHtml(e, open){
   const r = (window.RACES||{})[e.sport+"|"+e.start]; if (!r) return "";
-    const li = r.slice().sort((x,y)=> x[0]<y[0]?-1: x[0]>y[0]?1 : (x[2]||"").padStart(5,"0")<(y[2]||"").padStart(5,"0")?-1:1).map(([dt,t,tm]) => `<li class="${d(dt)<today?"pastr":""}"><b>${fmt(dt,dt)}</b><b class="tm">${tm?esc(tm.replace(".",":")):""}</b><span>${esc(t)}</span></li>`).join("");
+  const li = r.slice().sort((x,y)=> x[0]<y[0]?-1: x[0]>y[0]?1 : (x[1]||"").padStart(5,"0")<(y[1]||"").padStart(5,"0")?-1:1).map(([dt,tm,t]) => `<li class="${d(dt)<today?"pastr":""}"><b>${fmt(dt,dt)}</b><b class="tm">${tm?esc(tm.replace(".",":")):""}</b><span>${esc(t)}</span></li>`).join("");
   return `<details class="races"${open?" open":""}><summary>${r.length} lopp</summary><ul>${li}</ul><div class="rn">${esc((window.RACE_NOTES||{})[e.sport]||"")}</div></details>`;
 }
 
